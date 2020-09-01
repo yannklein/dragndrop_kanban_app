@@ -1,0 +1,30 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @kanban.name %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @kanban.description %>
+</p>
+
+<div class="kanban">
+  <% @kanban.cards["columns"].each do |column| %>
+    <ul class="kanban-col">
+      <li class="kanban-col-name"><%= column["name"] %></li>
+      <% column["items"].each do |item| %>
+        <li class="kanban-col-item"><%= item %></li>
+      <% end %>
+    </ul>
+  <% end %>
+</div>
+
+<%= simple_form_for @kanban do |f|%>
+  <%= f.input :cards, input_html: { class: "kanban-form-input" } %>
+  <%= f.submit "Saved changes" %>
+<% end %>
+
+<%= link_to 'Edit', edit_kanban_path(@kanban) %> |
+<%= link_to 'Back', kanbans_path %>
