@@ -41,7 +41,9 @@ class KanbansController < ApplicationController
   # PATCH/PUT /kanbans/1.json
   def update
     respond_to do |format|
-      @kanban.cards = JSON.parse(params[:kanban][:cards])
+      @kanban.assign_attributes(kanban_params)
+      @kanban.cards = JSON.parse(kanban_params[:cards])
+      # if @kanban.update(kanban_params)
       if @kanban.save
         format.html { redirect_to @kanban, notice: 'Kanban was successfully updated.' }
         format.json { render :show, status: :ok, location: @kanban }

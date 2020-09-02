@@ -10,7 +10,14 @@
   <%= @kanban.description %>
 </p>
 
-<div class="kanban">
+<% if false %>
+  <%= simple_form_for @kanban do |f|%>
+    <%= f.input :cards, input_html: { class: "kanban-form-input" } %>
+    <%= f.submit "Saved changes" %>
+  <% end %>
+<% end %>
+
+<div class="kanban" data-id="<%= @kanban.id %>">
   <% @kanban.cards["columns"].each do |column| %>
     <ul class="kanban-col">
       <li class="kanban-col-name"><%= column["name"] %></li>
@@ -21,10 +28,6 @@
   <% end %>
 </div>
 
-<%= simple_form_for @kanban do |f|%>
-  <%= f.input :cards, input_html: { class: "kanban-form-input" } %>
-  <%= f.submit "Saved changes" %>
-<% end %>
 
 <%= link_to 'Edit', edit_kanban_path(@kanban) %> |
 <%= link_to 'Back', kanbans_path %>

@@ -1,5 +1,5 @@
 import Sortable from 'sortablejs';
-
+import Rails from "@rails/ujs";
 
 const initKanbanSortable = (ulElements) => {
   const saveKanbanBinded = saveKanban.bind(null, ulElements);
@@ -13,7 +13,6 @@ const initKanbanSortable = (ulElements) => {
 };
 
 const kanbanForm = document.querySelector(".kanban-form-input");
-
 const saveKanban = (ulElements) => {
   const new_cards = {columns: []};
   ulElements.forEach(ul => {
@@ -26,7 +25,16 @@ const saveKanban = (ulElements) => {
       }
     );
   });
-  kanbanForm.value = JSON.stringify(new_cards);
+  // kanbanForm.value = JSON.stringify(new_cards);
+
+  const kanbanId = document.querySelector(".kanban").dataset.id;
+  const formData = new FormData();
+  formData.append('kanban[cards]', JSON.stringify(new_cards));
+  Rails.ajax({
+      url: `/kanbans/${kanbanId}`,
+      type: "patch",
+      data: formData
+    })
 }
 
 export { initKanbanSortable };
