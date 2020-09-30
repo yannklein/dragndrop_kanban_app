@@ -6,6 +6,8 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
+Card.destroy_all
+KanbanColumn.destroy_all
 Kanban.destroy_all
 
 my_kanban = Kanban.create(
