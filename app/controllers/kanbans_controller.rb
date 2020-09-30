@@ -1,5 +1,5 @@
 class KanbansController < ApplicationController
-  before_action :set_kanban, only: [:show, :edit, :update, :destroy]
+  before_action :set_kanban, only: [:show, :edit, :update, :destroy, :sort]
 
   # GET /kanbans
   # GET /kanbans.json
@@ -41,15 +41,27 @@ class KanbansController < ApplicationController
   # PATCH/PUT /kanbans/1.json
   def update
     respond_to do |format|
-      @kanban.assign_attributes(kanban_params)
-      @kanban.cards = JSON.parse(kanban_params[:cards])
-      # if @kanban.update(kanban_params)
-      if @kanban.save
+      if @kanban.update(kanban_params)
         format.html { redirect_to @kanban, notice: 'Kanban was successfully updated.' }
         format.json { render :show, status: :ok, location: @kanban }
       else
         format.html { render :edit }
         format.json { render json: @kanban.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def sort
+    # Get the new col sort
+    sorted_cols = JSON.parse(kanban_params["kanbanIds"])["columns"]
+    sorted_cols.each do |col|
+      # Look at each of its cards
+      col["itemIds"].each do |card_id|
+        # Find the card if in the DB and update its column and position within the column
+        Card.find(card_id).update(
+          kanban_column: KanbanColumn.find(col["id"]),
+          position: col["itemIds"].find_index(card_id)
+        )
       end
     end
   end
@@ -72,6 +84,6 @@ class KanbansController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def kanban_params
-      params.require(:kanban).permit(:name, :description, :cards)
+      params.require(:kanban).permit(:name, :description, :kanbanIds)
     end
 end

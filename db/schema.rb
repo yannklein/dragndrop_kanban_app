@@ -10,17 +10,35 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_01_052415) do
+ActiveRecord::Schema.define(version: 2020_09_30_055455) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "cards", force: :cascade do |t|
+    t.string "content"
+    t.integer "position"
+    t.bigint "kanban_column_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["kanban_column_id"], name: "index_cards_on_kanban_column_id"
+  end
+
+  create_table "kanban_columns", force: :cascade do |t|
+    t.string "name"
+    t.bigint "kanban_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["kanban_id"], name: "index_kanban_columns_on_kanban_id"
+  end
+
   create_table "kanbans", force: :cascade do |t|
     t.string "name"
     t.string "description"
-    t.jsonb "cards"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  add_foreign_key "cards", "kanban_columns"
+  add_foreign_key "kanban_columns", "kanbans"
 end
