@@ -14,41 +14,31 @@ const initKanbanSortable = (ulElements) => {
 
 const kanbanForm = document.querySelector(".kanban-form-input");
 const saveKanban = (ulElements) => {
-  // We will build an Object new_cards containing all the Ids
+  // Let's build an Object kanbanIds containing all the kanban Ids
   // E.g. :
   // {
-  //   columns: [
-  //     {
-  //       id: 0,
-  //       itemIds: [4,3,2]
-  //     },
-  //     {
-  //       id: 1,
-  //       itemIds: [5]
-  //     },
-  //     {
-  //       id: 2,
-  //       itemIds: [0,1]
-  //     },
+  //   "columns": [
+  //     { "id": 1, "itemIds": [3, 2] },
+  //     { "id": 2, "itemIds": [4, 5] },
+  //     { "id": 3, "itemIds": [6, 1] }
   //   ]
   // }
-  const new_cards = {"columns": []};
+  const kanbanIds = {"columns": []};
   ulElements.forEach(ul => {
     const itemIds = [];
     ul.querySelectorAll(".kanban-col-item")
       .forEach(item => itemIds.push(Number.parseInt(item.dataset.itemId,10)));
-    new_cards.columns.push(
+    kanbanIds.columns.push(
       {
         'id': Number.parseInt(ul.dataset.colId,10),
         'itemIds': itemIds
       }
     );
   });
-  // kanbanForm.value = JSON.stringify(new_cards);
-  console.log(new_cards);
+  // kanbanForm.value = JSON.stringify(kanbanIds);
   const kanbanId = document.querySelector(".kanban").dataset.id;
   const formData = new FormData();
-  formData.append('kanban[kanbanIds]', JSON.stringify(new_cards));
+  formData.append('kanban[kanbanIds]', JSON.stringify(kanbanIds));
   Rails.ajax({
       url: `/kanbans/${kanbanId}/sort`,
       type: "patch",

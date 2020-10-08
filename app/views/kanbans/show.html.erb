@@ -11,8 +11,8 @@
 </p>
 
 <% if false %>
-  <%= simple_form_for @kanban do |f|%>
-    <%= f.input :cards, input_html: { class: "kanban-form-input" } %>
+  <%= form_with url: kanban_sort_path, method: :patch do |f|%>
+    <%= f.text_field 'kanban[kanbanIds]', class: "kanban-form-input" %>
     <%= f.submit "Saved changes" %>
   <% end %>
 <% end %>
